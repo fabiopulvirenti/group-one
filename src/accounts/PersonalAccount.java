@@ -12,4 +12,20 @@ public class PersonalAccount extends AbstractAccount{
         this.validatedPhotoId =validatedPhotoId;
         this.validatedAddress =validatedAddress;
     }
+
+    public boolean isValidatedPhotoId() {
+        return validatedPhotoId;
+    }
+
+    public void setValidatedPhotoId(boolean validatedPhotoId) {
+        this.validatedPhotoId = validatedPhotoId;
+    }
+
+    public boolean isValidatedAddress() {
+        return validatedAddress;
+    }
+
+    public void setValidatedAddress(boolean validatedAddress) {
+        this.validatedAddress = validatedAddress;
+    }
 }
