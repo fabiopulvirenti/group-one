@@ -1,5 +1,7 @@
 package accounts;
 
+import Tools.FileTools;
+
 /**
  * Inherits from the class AbstractAccount. Used to create ISA accounts for customers.
  * Customer details are used to see if they meet the requirements and an account is
@@ -31,10 +33,17 @@ public class ISAAccount extends AbstractAccount{
         this.ukResident = ukResident;
         this.crownServant = crownServant;
 
-        if (validateAccount()) {
-            System.out.println("New " + isaType.toLowerCase() + " ISA account created.");
+        FileTools fileTools = new FileTools();
+        // Check if customer already has ISA account
+        if (fileTools.AccountExists(customerID, AccountType.ISA)) {
+            System.out.println("Access to account granted.");
         } else {
-            System.out.println("You do not meet the requirements to open a " + isaType.toLowerCase() + " ISA account. Please check the requirements and try again.");
+            // Check if user meets requirements for the ISA account
+            if (validateAccount()) {
+                System.out.println("New " + isaType.toLowerCase() + " ISA account created.");
+            } else {
+                System.out.println("You do not meet the requirements to open a " + isaType.toLowerCase() + " ISA account. Please check the requirements and try again.");
+            }
         }
     }
 

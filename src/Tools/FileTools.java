@@ -101,7 +101,7 @@ public class FileTools {
 
     // Checks the account file to see if an account for a user exists, returns true if
     // they exist and returns false if not
-    private boolean AccountExists(int id, AccountType type) {
+    public boolean AccountExists(int id, AccountType type) {
         try (Scanner scanner = new Scanner(new File(String.valueOf(accountPath)))) {
             //Declare the variables used and give the scanner a delimiter of ','
             String currentId;
