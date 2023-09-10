@@ -2,8 +2,8 @@ package accounts;
 
 public class ISAAccount extends AbstractAccount{
 
-    private final float apr = 2.75f;
-    private final String isaType;
+    private float apr = 2.75f;
+    private String isaType;
     private int customerAge;
     private boolean ukResident;
     private boolean crownServant;
