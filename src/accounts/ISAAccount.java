@@ -1,5 +1,10 @@
 package accounts;
 
+/**
+ * Inherits from the class AbstractAccount. Used to create ISA accounts for customers.
+ * Customer details are used to see if they meet the requirements and an account is
+ * created if requirements are met.
+ */
 public class ISAAccount extends AbstractAccount{
 
     private float apr = 2.75f;
@@ -9,9 +14,7 @@ public class ISAAccount extends AbstractAccount{
     private boolean crownServant;
 
     /**
-     * Inherits from the class AbstractAccount. Used to create ISA accounts for customers.
-     * Customer details are used to see if they meet the requirements and an account is
-     * created if requirements are met.
+     * Constructor for the ISAAccount class.
      *
      * @param customerID Customer's ID
      * @param balance The balance in the account
