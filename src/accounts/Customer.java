@@ -1,10 +1,15 @@
 package accounts;
 
+
+import java.util.Random;
+
 public class Customer {
 
     private String customerName;
 
     private String userName;
+
+    private int customerID;
 
     private String password;
 
@@ -33,4 +38,12 @@ public class Customer {
     public void setValidatedAddress(boolean validatedAddress) {
         this.validatedAddress = validatedAddress;
     }
+
+    public void storeNewCustomer(){
+        Random rand = new Random();
+        this.customerID = rand.nextInt(10000);
+        // TODO: storing the customer into the file
+
+    }
+
 }
