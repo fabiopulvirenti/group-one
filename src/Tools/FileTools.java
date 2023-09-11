@@ -61,12 +61,13 @@ public class FileTools {
     // Read from file functions that return boolean
     // Checks the user file for the id provided and returns true if the user exists
     // and returns false if the user doesn't
-    private boolean UserExist(int id) {
+    private boolean UserExist(String username) {
         try (Scanner scanner = new Scanner(new File(String.valueOf(userPath)))) {
             // Declare the variables used and give the scanner the delimiter of ','
-            String currentId;
+            String currentUsername;
             boolean userExists = false;
             scanner.useDelimiter(",");
+
             // If there is no scanner next line, file is empty
             if (!scanner.hasNext()) {
                 System.err.println("User file is empty");
@@ -74,17 +75,19 @@ public class FileTools {
             }
 
             // Records the first id in the file
-            currentId = scanner.next();
+            scanner.next();
+            currentUsername = scanner.next();
             scanner.nextLine();
 
             // Scans through the file checking for the id provided
-            while (scanner.hasNextLine() && !currentId.equals(String.valueOf(id))) {
-                currentId = scanner.next();
+            while (scanner.hasNextLine() && !currentUsername.equals(username)) {
+                scanner.next();
+                currentUsername = scanner.next();
                 scanner.nextLine();
             }
 
             // If id is found returns true
-            if (currentId.equals(String.valueOf(id))) {
+            if (currentUsername.equals(username)) {
                 userExists = true;
             }
 
@@ -147,8 +150,9 @@ public class FileTools {
 
     // Read from file functions that return data
 
-    // Functions take the id of the user and returns the password associated with the id
-    public String ReadUserFile(int id) {
+    // Functions take the id of the user and returns the username associated with the id
+    // Returns null if the file fails to open or if the file is empty
+    public String ReadUsername(int id) {
         try (Scanner scanner = new Scanner(new File(String.valueOf(userPath)))) {
             // Declare the variables used and give the scanner a delimiter of ','
             String currentId;
@@ -178,6 +182,47 @@ public class FileTools {
             // Closes the scanner and returns the password associated
             scanner.close();
             return userResults;
+
+        } catch (IOException e) {
+            // If the file fails to open, give an error and return null
+            System.err.println("Could not read from user file." + e.getMessage());
+            return null;
+        }
+    }
+    // Functions take the username of the user and returns the password associated with the username
+    // Returns null if the file fails to open or if the file is empty
+    public String ReadPassword(String username) {
+        try (Scanner scanner = new Scanner(new File(String.valueOf(userPath)))) {
+            // Declare the variables used and give the scanner a delimiter of ','
+            String currentUsername;
+            String userPassword = null;
+            scanner.useDelimiter(",");
+
+            // If the scanner has no next line, the file is empty
+            if (!scanner.hasNext()) {
+                System.err.println("User file is empty");
+                return userPassword;
+            }
+
+            // Stores the first id of the file
+            scanner.next();
+            currentUsername = scanner.next();
+
+            // Scans the file to check if the file contains the id provided
+            while (scanner.hasNextLine() && !currentUsername.equals(username)) {
+                scanner.nextLine();
+                scanner.next();
+                currentUsername = scanner.next();
+            }
+
+            // If the file does contain the id, it stores the password to the account
+            if (currentUsername.equals(username)) {
+                userPassword = scanner.next();
+            }
+
+            // Closes the scanner and returns the password associated
+            scanner.close();
+            return userPassword;
 
         } catch (IOException e) {
             // If the file fails to open, give an error and return null
@@ -283,30 +328,35 @@ public class FileTools {
     // Writing to file functions
 
     // Writes to the user file, used for creating new users
-    public void StoreUser(int id, String password) {
+    public void StoreUser(int id, String username, String password) {
         try (BufferedWriter writer = Files.newBufferedWriter(userPath, Charset.forName("UTF-8"), APPEND)) {
             // Checks if the user exists, if so flags an error
             // else store the user in the file
-            if (UserExist(id))
+            if (UserExist(username))
                 System.err.println("User already exists.");
             else
-                writer.write("" + id + ',' + password + '\n');
+                writer.write("" + id + ',' + username + ',' + password + '\n');
         } catch (IOException e) {
             // If the file can't be opened, flags up an error
             System.err.println("User could not be stored. " + e.getMessage());
         }
     }
 
+    // Overload function for the function below. Automatically assigns the isaType to null if
+    // it isn't entered
+    public void StoreAccount(int id, AccountType type, float balance) {
+        this.StoreAccount(id, type, balance, 'n');
+    }
     // Writes to the account file, used for creating new accounts for users.
     // Users can have multiple accounts
-    public void StoreAccount(int id, AccountType type, float balance) {
+    public void StoreAccount(int id, AccountType type, float balance, char isaType) {
         try (BufferedWriter writer = Files.newBufferedWriter(accountPath, Charset.forName("UTF-8"), APPEND)) {
             // Checks if the account exists, if so flags an error
             // else store the user in the file
             if (AccountExists(id, type))
                 System.err.println("Account already exists.");
             else
-                writer.write("" + id + ',' + type + ',' + balance + '\n');
+                writer.write("" + id + ',' + type + ',' + balance + ',' + isaType + '\n');
         } catch (IOException e) {
             // If the file can't be opened, flags up an error
             System.err.println("Account could not be stored. " + e.getMessage());
