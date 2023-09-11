@@ -39,6 +39,16 @@ class FileToolsTest {
         var tools = new FileTools();
         System.out.println(tools.ReadUsername(1));
     }
+    @Test
+    public void ReadingIdOfUser() {
+        var tools = new FileTools();
+        System.out.println(tools.ReadId("Frankie"));
+    }
+    @Test
+    public void ReadingPasswordOfUser() {
+        var tools = new FileTools();
+        System.out.println(tools.ReadPassword("Frankie"));
+    }
 
     @Test
     public void WritingToAccountsFile(){

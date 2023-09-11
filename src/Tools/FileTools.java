@@ -150,6 +150,49 @@ public class FileTools {
 
     // Read from file functions that return data
 
+    // Function takes the username of the user and returns the id associated with the account
+    // Function returns 0 if the id doesn't exist
+    public int ReadId(String username) {
+        try (Scanner scanner = new Scanner(new File(String.valueOf(userPath)))) {
+            // Declare the variables used and give the scanner a delimiter of ','
+            String currentUsername;
+            String previousId;
+            int userId = 0;
+            scanner.useDelimiter(",");
+
+            // If the scanner has no next line, the file is empty
+            if (!scanner.hasNext()) {
+                System.err.println("User file is empty");
+                return userId;
+            }
+
+            // Stores the first username of the file
+            previousId = scanner.next();
+            currentUsername = scanner.next();
+
+            // Scans the file to check if the file contains the id provided
+            while (scanner.hasNextLine() && !currentUsername.equals(username)) {
+                scanner.nextLine();
+                previousId = scanner.next();
+                currentUsername = scanner.next();
+            }
+
+            // If the file does contain the id, it stores the password to the account
+            if (currentUsername.equals(username)) {
+                userId = Integer.parseInt(previousId);
+            }
+
+            // Closes the scanner and returns the password associated
+            scanner.close();
+            return userId;
+
+        } catch (IOException e) {
+            // If the file fails to open, give an error and return null
+            System.err.println("Could not read from user file." + e.getMessage());
+            return 0;
+        }
+    }
+
     // Functions take the id of the user and returns the username associated with the id
     // Returns null if the file fails to open or if the file is empty
     public String ReadUsername(int id) {
