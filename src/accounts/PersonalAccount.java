@@ -7,5 +7,11 @@ public class PersonalAccount extends AbstractAccount{
         super(customerId, balance, customerName, AccountType.PERSONAL);
     }
 
+    public void storeAccount() {
+        this.getCustomerId();
+        this.getType();
+        this.getBalance();
+    }
+
 
 }

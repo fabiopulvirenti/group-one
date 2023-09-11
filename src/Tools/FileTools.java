@@ -61,7 +61,7 @@ public class FileTools {
     // Read from file functions that return boolean
     // Checks the user file for the id provided and returns true if the user exists
     // and returns false if the user doesn't
-    private boolean UserExist(String username) {
+    public boolean UserExist(String username) { // I had to change from private to public because I need to use it within the ConsoleUI.
         try (Scanner scanner = new Scanner(new File(String.valueOf(userPath)))) {
             // Declare the variables used and give the scanner the delimiter of ','
             String currentUsername;

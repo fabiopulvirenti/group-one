@@ -29,10 +29,10 @@ public class ISAAccount extends AbstractAccount{
     public ISAAccount (int customerID, float balance, String customerName, int customerAge, String isaType, boolean ukResident, boolean crownServant) {
         super(customerID, balance, customerName, AccountType.ISA);
         this.isaType = isaType;
-        this.customerAge = customerAge;
         this.ukResident = ukResident;
         this.crownServant = crownServant;
 
+        //this line shpuld not be here
         FileTools fileTools = new FileTools();
         // Check if customer already has ISA account
         if (fileTools.AccountExists(customerID, AccountType.ISA)) {
