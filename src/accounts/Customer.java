@@ -73,4 +73,8 @@ public class Customer {
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
     }
+
+    public String getUserName(){
+        return this.userName;
+    }
 }
