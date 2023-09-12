@@ -17,6 +17,8 @@ public abstract class AbstractAccount {
         this.type = type;
     }
 
+
+
     public int getCustomerId() {
         return customerId;
     }

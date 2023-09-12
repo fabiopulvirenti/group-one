@@ -1,5 +1,7 @@
 package accounts;
 
+import Tools.FileTools;
+
 public class PersonalAccount extends AbstractAccount{
 
 
@@ -7,11 +9,9 @@ public class PersonalAccount extends AbstractAccount{
         super(customerId, balance, customerName, AccountType.PERSONAL);
     }
 
+
     public void storeAccount() {
-        this.getCustomerId();
-        this.getType();
-        this.getBalance();
+        FileTools fileTools = new FileTools();
+        fileTools.StoreAccount(getCustomerId(), getType(), getBalance());
     }
-
-
 }

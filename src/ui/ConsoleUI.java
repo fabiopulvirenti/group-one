@@ -2,40 +2,80 @@ package ui;
 
 import Tools.FileTools;
 import accounts.Customer;
+import accounts.PersonalAccount;
 
 import java.util.Scanner;
 
 public class ConsoleUI {
 
-    public void mainEntry() {
-        int optionGiven = mainMenu();
-        switch (optionGiven) {
-            case 1:
-                authenticateCustomerMenu();
-                break;
-            case 2:
-                openAccountMenu();
-                break;
-        }
-    }
+    Scanner reader = new Scanner(System.in);
+    HelperUI helper = new HelperUI();
 
+    public void mainEntry() {
+        System.out.println("####################################");
+        System.out.println("#  Welcome to ACME Banking System  #");
+        System.out.println("####################################");
+        System.out.println("");
+
+        boolean whileTrue = true;
+        while(whileTrue) {
+            int optionGiven = mainMenu();
+            switch (optionGiven) {
+                case 1:
+                    authenticateCustomerMenu();
+                    break;
+                case 2:
+                    openAccountMenu();
+                    break;
+                case 3:
+                    helper.askForHelpMainEntry();
+                    break;
+                case 4:
+                    whileTrue=false;
+                    break;
+            }
+        }
+
+        System.out.println("");
+        System.out.println("");
+        System.out.println("#################################");
+        System.out.println("#           Goodbye!            #");
+        System.out.println("#  Thanks for Banking with us!  #");
+        System.out.println("#################################");
+    }
 
     public int mainMenu() {
 
         System.out.println("Choose between the following options: ");
         System.out.println("  1. Authenticate customer");
         System.out.println("  2. Open account");
+        System.out.println("  3. Help");
+        System.out.println("  4. Exit");
+        System.out.println("");
         System.out.print("Option: ");
 
-        Scanner reader = new Scanner(System.in);
-        int input = reader.nextInt();
-        return input;
+        int inputValue=0;
+        boolean notValid=true;
+        while (notValid) {
+            String input = reader.next();
+            try {
+                inputValue = Integer.parseInt(input);
+                if (inputValue<1 || inputValue >4){
+                    System.out.print("Value not valid. Insert again. Expected 1  2 or 3 : ");
+                } else {
+                    notValid = false;
+                }
+            } catch (Exception e) {
+                System.out.print("Value not valid. Insert again. Expected 1 or 2 or 3: ");
+            }
+        }
+
+        return inputValue;
     }
 
     // The function authenticate the customer, and returns an instance of Customer with the data of the given username
     // if correctly authenticated, or null if the customer was not authenticated.
     public Customer authenticateCustomerMenu() {
-        Scanner reader = new Scanner(System.in);
 
         System.out.println("Insert customer's username: ");
         String inputUserName = reader.next();
@@ -69,9 +109,9 @@ public class ConsoleUI {
         System.out.println("Customer Menu");
         System.out.println("  1. New customer");
         System.out.println("  2. Existing customer");
+        System.out.println("  3. Help");
         System.out.print("Choose the option:");
 
-        Scanner reader = new Scanner(System.in);
         int input = reader.nextInt();
 
         switch (input) {
@@ -110,8 +150,10 @@ public class ConsoleUI {
                    openAccountWithCustomer(customer);
                 }
                 break;
+            case 3:
+                helper.askForHelpOpenAccountMenu();
+                break;
         }
-
 
     }
 
@@ -120,9 +162,9 @@ public class ConsoleUI {
         System.out.println("  1. Personal Account");
         System.out.println("  2. ISA Account");
         System.out.println("  3. Business Account");
+        System.out.println("  4. Help");
         System.out.print("Choose the option: ");
 
-        Scanner reader = new Scanner(System.in);
         int input = reader.nextInt();
 
         switch (input) {
@@ -134,16 +176,30 @@ public class ConsoleUI {
                 break;
             case 3:
                 openBusinessAccount(customer);
+                break;
+            case 4:
+                helper.askForHelpOpenAccountWithCustomer();
+                break;
         }
 
     }
 
     private void openPersonalAccount(Customer customer) {
-        System.out.println("How much does the customer want to deposit?");
-        Scanner reader = new Scanner(System.in);
-        String balanceInput = reader.next();
+        boolean whileTrue = true;
+        while (whileTrue) {
+            System.out.println("How much does the customer want to deposit?");
+            String balanceInput = reader.next();
 
-        float balance = Float.parseFloat(balanceInput.trim());
+            float balance = Float.parseFloat(balanceInput.trim());
+            if (balance < 1) {
+                System.out.println("Deposit lower than minimum.");
+                System.out.println("Minimum deposit is 1 GBP");
+            } else {
+                PersonalAccount personalAccount = new PersonalAccount(customer.getCustomerID(), balance, customer.getCustomerName());
+                personalAccount.storeAccount();
+                whileTrue = false;
+            }
+        }
 
     }
 

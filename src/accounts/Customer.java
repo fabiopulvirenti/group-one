@@ -7,7 +7,7 @@ import java.util.Random;
 
 public class Customer {
 
-//    private String customerName;
+   private String customerName;
 
     private String userName;
 
@@ -58,7 +58,19 @@ public class Customer {
         fileTools.StoreUser(customerID, userName,password);
     }
 
+    public int getCustomerID() {
+        return customerID;
+    }
 
+    public void setCustomerID(int customerID) {
+        this.customerID = customerID;
+    }
 
+    public String getCustomerName() {
+        return customerName;
+    }
 
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
 }
