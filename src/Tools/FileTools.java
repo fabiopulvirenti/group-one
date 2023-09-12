@@ -201,6 +201,50 @@ public class FileTools {
             return false;
         }
     }
+    // Checks if the amount account exists for a user
+    // If the user has the amount of accounts provided, returns true
+    // If the user does not have the amount of accounts provided, returns false
+    public boolean AccountExists(int id, int accountNum) {
+        try (Scanner scanner = new Scanner(new File(String.valueOf(accountPath)))) {
+            //Declare the variables used and give the scanner a delimiter of ','
+            String currentId;
+            int currentNum;
+            boolean accountExists = false;
+            scanner.useDelimiter("[,\\n]");
+            // If there is no scanner next line, the file is empty
+            if (!scanner.hasNextLine()) {
+                // System.err.println("Account file is empty");
+                scanner.close();
+                return accountExists;
+            }
+
+            // Scans through the file to check if an id matches the one provided
+            // if so, checks to see if the account is the same as the one provided
+            while (scanner.hasNextLine()) {
+                currentId = scanner.next();
+                if (currentId.equals(String.valueOf(id))) {
+                    scanner.next();
+                    scanner.next();
+                    currentNum = Integer.parseInt(scanner.next());
+                    if (currentNum == accountNum) {
+                        accountExists = true;
+                        break;
+                    }
+                }
+                scanner.nextLine();
+            }
+
+            // Closes the scanner and returns a boolean, true if the account exists and false if it doesn't
+            scanner.close();
+            return accountExists;
+
+        } catch (IOException e) {
+            // If the file cannot be read or doesn't exist, flag an error and return false
+            System.err.println("Could not read from account file." + e.getMessage());
+            return false;
+        }
+    }
+
 
     // Read from file functions that return data
 
@@ -387,6 +431,60 @@ public class FileTools {
             return null;
         }
     }
+    // Personal account read file overload
+    // Function takes the id and account num of the user and returns the balance associated with that personal account
+    // Returns 0 if the account doesn't exist or if the file fails to open
+    public String ReadAccountFile(int id, int accountNum) {
+        try (Scanner scanner = new Scanner(new File(String.valueOf(accountPath)))) {
+            // Declare the variables needed and give the scanner a delimiter of ','
+            String currentId;
+            String currentBalance;
+            String currentNum;
+            String userResults = "0";
+            scanner.useDelimiter("[,\\n]");
+
+            // Checks to see if the account exists
+            if (!AccountExists(id, accountNum)) {
+                System.err.println("Account doesn't exist");
+                return userResults;
+            }
+
+
+            // If the scanner has no next line, the file is empty
+            if (!scanner.hasNext()) {
+                // System.err.println("The account file is empty");
+                scanner.close();
+                return userResults;
+            }
+
+            // Scans through the file and checks to see if it contains the id and type provided
+            while (scanner.hasNextLine()) {
+                currentId = scanner.next();
+                if (currentId.equals(String.valueOf(id))) {
+                    scanner.next();
+                    currentBalance = scanner.next();
+                    currentNum = scanner.next();
+                    // If the file contains the id and type, returns the balance of the account
+                    if (Integer.parseInt(currentNum) == accountNum) {
+                        userResults = currentBalance;
+                        break;
+                    }
+
+                }
+                scanner.nextLine();
+            }
+
+            // Closes the scanner and returns the results
+            scanner.close();
+            return userResults;
+
+        } catch (IOException e) {
+            // If the file fails to open, show an error and return null
+            System.err.println("Could not read from account file." + e.getMessage());
+            return null;
+        }
+    }
+
     public char ReadISAType(int id) {
         try (Scanner scanner = new Scanner(new File(String.valueOf(accountPath)))) {
             // Declare the variables needed and give the scanner a delimiter of ','
@@ -504,17 +602,19 @@ public class FileTools {
     // Writes to the account file, used for creating new accounts for users.
     // Users can have multiple personal accounts
     // Users can only have one isa or business account
-    public void StoreAccount(int id, AccountType type, float balance, char isaType) {
+    public void StoreAccount(int id, AccountType type, float balance, int accountNum, char isaType) {
         try (BufferedWriter writer = Files.newBufferedWriter(accountPath, StandardCharsets.UTF_8, APPEND)) {
 
             // Checks if the account type is personal
             if (type == AccountType.PERSONAL) {
                 // If the file is empty, writes the account on the first line of the file
                 // else writes the account on the next line of the file
-                if (FileEmpty(accountPath))
-                    writer.write("" + id + ',' + type + ',' + balance + ',' + isaType);
+                if (AccountExists(id, accountNum))
+                    System.err.println("Account already exists.");
+                else if (FileEmpty(accountPath))
+                    writer.write("" + id + ',' + type + ',' + balance + ',' + accountNum + ',' + isaType);
                 else
-                    writer.write("\n" + id + ',' + type + ',' + balance + ',' + isaType);
+                    writer.write("\n" + id + ',' + type + ',' + balance + ',' + accountNum + ',' + isaType);
             } else {
                 // If the account exists, flag an error that the account already exists
                 // else if the file is empty, writes the account on the first line of the file
@@ -522,9 +622,9 @@ public class FileTools {
                 if (AccountExists(id, type))
                     System.err.println("Account already exists.");
                 else if (FileEmpty(accountPath))
-                    writer.write("" + id + ',' + type + ',' + balance + ',' + isaType);
+                    writer.write("" + id + ',' + type + ',' + balance + ',' + 0 + ',' + isaType);
                 else
-                    writer.write("\n" + id + ',' + type + ',' + balance + ',' + isaType);
+                    writer.write("\n" + id + ',' + type + ',' + balance + ',' + 0 + ',' + isaType);
             }
         } catch (IOException e) {
             // If the file can't be opened, flags up an error
@@ -532,12 +632,89 @@ public class FileTools {
         }
     }
 
-    // Overload function for the function above. Automatically assigns the isaType to null if
-    // it isn't entered
+    // Overload function for the function above
+    // Assigns the account num to 0
+    // Assigns isaType to null if not entered
     public void StoreAccount(int id, AccountType type, float balance) {
-        this.StoreAccount(id, type, balance, 'n');
+        this.StoreAccount(id, type, balance, 0, 'n');
+    }
+    // Overload function for the function above
+    // Assigns isaType to null if not entered
+    public void StoreAccount(int id, AccountType type, float balance, int accountNum) {
+        this.StoreAccount(id, type, balance, accountNum, 'n');
+    }
+    // Overload function for the function above
+    // Assigns account num to 0 if not entered
+    public void StoreAccount(int id, AccountType type, float balance, char isaType) {
+        this.StoreAccount(id, type, balance, 0, isaType);
     }
 
+
+    // Writes to the transaction file, used for recording transactions of accounts
+    public void RecordTransaction(int id, AccountType type, float newBalance) {
+        try (BufferedWriter writer = Files.newBufferedWriter(transactionPath, StandardCharsets.UTF_8, APPEND)) {
+
+            // Checks if the account exists
+            if (!AccountExists(id, type)) {
+                System.err.println("Account doesn't exist.");
+                writer.close();
+                return;
+            }
+
+            // If the file is empty, writes the transaction on the first line of the file
+            // else writes the transaction on the next line of the file
+            if (FileEmpty(transactionPath)) {
+                String balance;
+                balance = ReadAccountFile(id, type);
+                writer.write("" + id + ',' + type + ',' + 0 + ',' + balance + ',' + newBalance);
+                writer.close();
+                UpdateAccount(id, type, balance, newBalance);
+            }
+            else {
+                String balance;
+                balance = ReadAccountFile(id, type);
+                writer.write("\n" + id + ',' + type + ',' + 0 + ',' + balance + ',' + newBalance);
+                writer.close();
+                UpdateAccount(id, type, balance, newBalance);
+            }
+        } catch (IOException e) {
+            // If the file can't be opened, flags up an error
+            System.err.println("Transaction could not be recorded. " + e.getMessage());
+        }
+    }
+    // Personal account overload
+    // Writes to the transaction file, used for recording transactions of accounts
+    public void RecordTransaction(int id, int accountNum, float newBalance) {
+        try (BufferedWriter writer = Files.newBufferedWriter(transactionPath, StandardCharsets.UTF_8, APPEND)) {
+
+            // Checks if the account exists
+            if (!AccountExists(id, accountNum)) {
+                System.err.println("Account doesn't exist.");
+                writer.close();
+                return;
+            }
+
+            // If the file is empty, writes the transaction on the first line of the file
+            // else writes the transaction on the next line of the file
+            if (FileEmpty(transactionPath)) {
+                String balance;
+                balance = ReadAccountFile(id, accountNum);
+                writer.write("" + id + ',' + AccountType.PERSONAL + ',' + accountNum + ',' + balance + ',' + newBalance);
+                writer.close();
+                UpdateAccount(id, accountNum, balance, newBalance);
+            }
+            else {
+                String balance;
+                balance = ReadAccountFile(id, accountNum);
+                writer.write("\n" + id + ',' + AccountType.PERSONAL + ',' + accountNum + ',' + balance + ',' + newBalance);
+                writer.close();
+                UpdateAccount(id, accountNum, balance, newBalance);
+            }
+        } catch (IOException e) {
+            // If the file can't be opened, flags up an error
+            System.err.println("Transaction could not be recorded. " + e.getMessage());
+        }
+    }
     // Updates the account when a transaction is made
     private void UpdateAccount(int id, AccountType type, String oldBalance, float newBalance) {
         try {
@@ -574,37 +751,41 @@ public class FileTools {
             System.err.println("Could not read from transaction file." + e.getMessage());
         }
     }
+    // Personal account overload
+    // Updates the account when a transaction is made
+    private void UpdateAccount(int id, int accountNum, String oldBalance, float newBalance) {
+        try {
+            // Declare the variables used for the function
+            Scanner scanner = new Scanner(new File(String.valueOf(accountPath)));
+            StringBuilder oldString = new StringBuilder();
+            String newString;
 
-    // Writes to the transaction file, used for recording transactions of accounts
-    public void RecordTransaction(int id, AccountType type, float newBalance) {
-        try (BufferedWriter writer = Files.newBufferedWriter(transactionPath, StandardCharsets.UTF_8, APPEND)) {
-
-            // Checks if the account exists
-            if (!AccountExists(id, type)) {
-                System.err.println("Account doesn't exist.");
-                writer.close();
+            // Checks if the file is empty
+            if (!scanner.hasNext()) {
+                // System.err.println("The account file is empty");
+                scanner.close();
                 return;
             }
 
-            // If the file is empty, writes the transaction on the first line of the file
-            // else writes the transaction on the next line of the file
-            if (FileEmpty(transactionPath)) {
-                String balance;
-                balance = ReadAccountFile(id, type);
-                writer.write("" + id + ',' + type + ',' + balance + ',' + newBalance);
-                writer.close();
-                UpdateAccount(id, type, balance, newBalance);
+            oldString.append(scanner.nextLine());
+
+            // Stores all the information inside the file
+            while(scanner.hasNextLine()) {
+                oldString.append("\n").append(scanner.nextLine());
             }
-            else {
-                String balance;
-                balance = ReadAccountFile(id, type);
-                writer.write("\n" + id + ',' + type + ',' + balance + ',' + newBalance);
-                writer.close();
-                UpdateAccount(id, type, balance, newBalance);
-            }
+
+            scanner.close();
+
+            // Replaces the account balance with the new balance
+            newString = oldString.toString().replace(id + "," + AccountType.PERSONAL + "," +  oldBalance + "," + accountNum, id + "," + AccountType.PERSONAL + "," + newBalance + "," + accountNum);
+
+            // Writes the file out with the new information
+            BufferedWriter writer = Files.newBufferedWriter(accountPath, StandardCharsets.UTF_8);
+            writer.write(newString);
+            writer.close();
+
         } catch (IOException e) {
-            // If the file can't be opened, flags up an error
-            System.err.println("Transaction could not be recorded. " + e.getMessage());
+            System.err.println("Could not read from transaction file." + e.getMessage());
         }
     }
 

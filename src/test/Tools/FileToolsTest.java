@@ -68,7 +68,7 @@ class FileToolsTest {
     @Test
     public void WritingToAccountsFile(){
         var tools = new FileTools();
-        tools.StoreAccount(1, AccountType.PERSONAL, 30f);
+        tools.StoreAccount(1, AccountType.PERSONAL, 30f, 1);
     }
     @Test
     public void WritingASecondAccountSameUser() {
@@ -78,7 +78,12 @@ class FileToolsTest {
     @Test
     public void WritingToAnAccountThatExistsPersonal() {
         var tools = new FileTools();
-        tools.StoreAccount(1, AccountType.PERSONAL, 30f);
+        tools.StoreAccount(1, AccountType.PERSONAL, 30f, 2);
+    }
+    @Test
+    public void WritingToAnAccountThatHasSameAccountNum() {
+        var tools = new FileTools();
+        tools.StoreAccount(1, AccountType.PERSONAL, 40f, 1);
     }
     @Test
     public void WritingToAnAccountThatExistsBusiness() {
@@ -105,6 +110,12 @@ class FileToolsTest {
     public void WritingToTransactionFile() {
         var tools = new FileTools();
         tools.RecordTransaction(1, AccountType.PERSONAL, 30f);
+
+    }
+    @Test
+    public void WritingToTransactionFileWithSecondPersonalAccount() {
+        var tools = new FileTools();
+        tools.RecordTransaction(1, 2, 30f);
 
     }
 
