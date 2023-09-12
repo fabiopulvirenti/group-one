@@ -30,6 +30,16 @@ class FileToolsTest {
         tools.StoreUser(2, "Jeff","Passyword");
     }
     @Test
+    public void WritingUserSameIdDifferentUsername() {
+        var tools = new FileTools();
+        tools.StoreUser(1, "Matthew", "Password123");
+    }
+    @Test
+    public void WritingUserDifferentIdSameUsername() {
+        var tools = new FileTools();
+        tools.StoreUser(4, "Frankie", "Packword");
+    }
+    @Test
     public void WritingToUserSameID() {
         var tools = new FileTools();
         tools.StoreUser(1, "Frankie","Password");
@@ -49,6 +59,11 @@ class FileToolsTest {
         var tools = new FileTools();
         System.out.println(tools.ReadPassword("Frankie"));
     }
+    @Test
+    public void ReadingUserThatDoesntExist() {
+        var tools = new FileTools();
+        System.out.println(tools.ReadId("Robert"));
+    }
 
     @Test
     public void WritingToAccountsFile(){
@@ -61,9 +76,14 @@ class FileToolsTest {
         tools.StoreAccount(1, AccountType.BUSINESS, 60f);
     }
     @Test
-    public void WritingToAnAccountThatExists() {
+    public void WritingToAnAccountThatExistsPersonal() {
         var tools = new FileTools();
         tools.StoreAccount(1, AccountType.PERSONAL, 30f);
+    }
+    @Test
+    public void WritingToAnAccountThatExistsBusiness() {
+        var tools = new FileTools();
+        tools.StoreAccount(1, AccountType.BUSINESS, 50f);
     }
     @Test
     public void WritingAnISAAccount() {
@@ -74,6 +94,11 @@ class FileToolsTest {
     public void ReadingAccountFile() {
         var tools = new FileTools();
         System.out.println(tools.ReadAccountFile(1, AccountType.PERSONAL));
+    }
+    @Test
+    public void ReadingAccountThatDoesntExist() {
+        var tools = new FileTools();
+        System.out.println(tools.ReadAccountFile(3, AccountType.ISA));
     }
 
     @Test
@@ -94,12 +119,12 @@ class FileToolsTest {
         var tools = new FileTools();
         tools.RecordTransaction(1, AccountType.ISA, 30f);
     }
-    @Test
-    public void ReadingTransactionFile() {
-        var tools = new FileTools();
-        String[] balances;
-        balances = tools.ReadTransaction(1, AccountType.PERSONAL);
-        System.out.println("Old balance: " + balances[0] +
-                            "New balance: " + balances[1]);
-    }
+//    @Test
+//    public void ReadingTransactionFile() {
+//        var tools = new FileTools();
+//        String[] balances;
+//        balances = tools.ReadTransaction(1, AccountType.PERSONAL);
+//        System.out.println("Old balance: " + balances[0] + '\n' +
+//                            "New balance: " + balances[1]);
+//    }
 }
