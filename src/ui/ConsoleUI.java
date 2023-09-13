@@ -1,10 +1,7 @@
 package ui;
 
 import Tools.FileTools;
-import accounts.AccountType;
-import accounts.Customer;
-import accounts.ISAAccount;
-import accounts.PersonalAccount;
+import accounts.*;
 
 import java.time.LocalDate;
 import java.util.Scanner;
@@ -40,6 +37,7 @@ public class ConsoleUI {
             }
         }
 
+        reader.close();
         System.out.println("");
         System.out.println("");
         System.out.println("#################################");
@@ -231,7 +229,11 @@ public class ConsoleUI {
                     whileTrue = false;
                     break;
                 case 3:
-                    openBusinessAccount(customer);
+                    if (fileTools.AccountExists(customer.getCustomerID(), AccountType.BUSINESS)) {
+                        System.out.println("This customer already has a business account. Each business can only have one account");
+                    } else {
+                        openBusinessAccount(customer);
+                    }
                     whileTrue = false;
                     break;
                 case 4:
@@ -423,6 +425,56 @@ public class ConsoleUI {
     }
 
     private void openBusinessAccount(Customer customer) {
-        // TODO: Joshua
+        String userInput;
+
+        System.out.println("Do you currently own an existing business? Y / N");
+        userInput = reader.nextLine();
+        if (!userInput.trim().equalsIgnoreCase("y")) {
+            System.out.println("This account can only be opened up to customers with proof of an existing business");
+            return;
+        }
+
+        System.out.println("Does the business exist an enterprise, plc, charity or public sector? Y / N");
+        userInput = reader.nextLine();
+        if (!userInput.trim().equalsIgnoreCase("y")) {
+            System.out.println("These businesses cannot open a business account. Please refer to a different department.");
+            return;
+        }
+
+        do {
+            System.out.println("""
+                            What kind of business account do you want to set up:
+                            1. Sole Trader - Simpler to set up, but you're personally responsible for your debts and accounting.
+                            2. Limited Company - Finances are separate from your personal finances, but there are more reporting and management responsibilities.
+                            3. Partnership - A partnership is the simplest way for 2 or more people to run a business together. You both share responsibilities and debt.
+                            4. Go back.
+                            """);
+            userInput = reader.nextLine();
+
+            try {
+                if (Integer.parseInt(userInput) == 4) {
+                    return;
+                } else if (Integer.parseInt(userInput) < 0 || Integer.parseInt(userInput) > 4) {
+                    System.out.println("Please enter a input between 1 - 4");
+                    continue;
+                }
+            } catch (Exception e) {
+                System.out.println("Please enter a valid input. A number between 1 - 4.");
+                continue;
+            }
+            try {
+                System.out.println("Please enter the balance for the business account: ");
+                userInput = reader.nextLine();
+                BusinessAccount businessAccount = new BusinessAccount(customer.getCustomerID(), Float.parseFloat(userInput), customer.getCustomerName());
+                businessAccount.storeAccount();
+                System.out.println("Business account has been set up.");
+                return;
+            } catch (Exception e) {
+                System.out.println("Please enter a valid numerical input for the balance.");
+            }
+        } while (true);
+
+
+
     }
 }
