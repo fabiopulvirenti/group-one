@@ -116,7 +116,7 @@ public class ConsoleUI {
             System.out.println("  1. New customer");
             System.out.println("  2. Existing customer");
             System.out.println("  3. Help");
-            System.out.print("Choose the option:");
+            System.out.print("Choose the option: ");
 
             int input;
             String inputValue = reader.next();

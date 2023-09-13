@@ -58,6 +58,57 @@ public class FileTools {
         }
     }
 
+    // Read from file to get next id and account numbers
+    public int GetNextId() {
+        try (Scanner scanner = new Scanner(new File(String.valueOf(userPath)))) {
+            int nextId = 0;
+            scanner.useDelimiter("[,\\n]");
+            if (!scanner.hasNext()) {
+                scanner.close();
+                return 0;
+            }
+
+            while (scanner.hasNextLine()) {
+                nextId++;
+                scanner.nextLine();
+            }
+
+            scanner.close();
+            return nextId;
+
+        } catch (IOException e) {
+            // If the file cannot be read or doesn't exist, flag an error and return false
+            System.err.println("Could not read from user file." + e.getMessage());
+            return 0;
+        }
+    }
+    public int GetNextAccountId(int userId) {
+        try (Scanner scanner = new Scanner(new File(String.valueOf(accountPath)))) {
+            int nextId = 0;
+            String currentId;
+            scanner.useDelimiter("[,\\n]");
+            if (!scanner.hasNext()) {
+                scanner.close();
+                return 0;
+            }
+
+            while (scanner.hasNextLine()) {
+                currentId = scanner.next();
+                if (currentId.equals(String.valueOf(userId)))
+                    nextId++;
+                scanner.nextLine();
+            }
+
+            scanner.close();
+            return nextId;
+
+        } catch (IOException e) {
+            // If the file cannot be read or doesn't exist, flag an error and return false
+            System.err.println("Could not read from user file." + e.getMessage());
+            return 0;
+        }
+    }
+
     // Read from file functions that return boolean
 
     // Checks if the given file is empty
@@ -88,7 +139,7 @@ public class FileTools {
             // Declare the variables used and give the scanner the delimiter of ','
             String currentId;
             boolean userExists = false;
-            scanner.useDelimiter(",");
+            scanner.useDelimiter("[,\\n]");
 
             // If there is no scanner next line, file is empty
             if (!scanner.hasNext()) {

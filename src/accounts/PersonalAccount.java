@@ -11,7 +11,9 @@ public class PersonalAccount extends AbstractAccount{
 
 
     public void storeAccount() {
+        int tempAccountId;
         FileTools fileTools = new FileTools();
-        fileTools.StoreAccount(getCustomerId(), getType(), getBalance());
+        tempAccountId = fileTools.GetNextAccountId(getCustomerId());
+        fileTools.StoreAccount(getCustomerId(), getType(), getBalance(), (tempAccountId+1));
     }
 }

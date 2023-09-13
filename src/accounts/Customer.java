@@ -4,7 +4,6 @@ package accounts;
 import Tools.FileTools;
 
 import java.time.LocalDate;
-import java.util.Random;
 
 public class Customer {
 
@@ -53,10 +52,11 @@ public class Customer {
     }
 
     public void storeNewCustomer(){
-        Random rand = new Random();
-        this.customerID = rand.nextInt(10000);
         FileTools fileTools = new FileTools();
+        this.customerID = (fileTools.GetNextId()+1);
+
         fileTools.StoreUser(customerID, userName, password, yearOfBirth);
+
     }
 
     public int getCustomerID() {
