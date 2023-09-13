@@ -157,16 +157,16 @@ public class ConsoleUI {
                     } while (!validAnswer);
 
                     if (photoIDInput.equalsIgnoreCase("Y") && addressIDInput.equalsIgnoreCase("Y")) {
-                        boolean uniqueUsernameCheck = true;
+
                         String customerUsername="";
-                        while (uniqueUsernameCheck) {
+                        while (true) {
                             System.out.println("Create customer username");
                             customerUsername = reader.next();
 
                             if(fileTools.UserExist(customerUsername)){
                                 System.out.println("Username exist, please pick a new one.");
                             } else {
-                                uniqueUsernameCheck = false;
+                                break;
                             }
                         }
 
