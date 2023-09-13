@@ -678,18 +678,18 @@ public class FileTools {
         }
     }
 
-    // Overload function for the function above
+    // Overload function for the function above (Used for business account)
     // Assigns the account num to 0
     // Assigns isaType to null if not entered
     public void StoreAccount(int id, AccountType type, float balance) {
         this.StoreAccount(id, type, balance, 0, 'n');
     }
-    // Overload function for the function above
+    // Overload function for the function above (Used for personal account)
     // Assigns isaType to null if not entered
     public void StoreAccount(int id, AccountType type, float balance, int accountNum) {
         this.StoreAccount(id, type, balance, accountNum, 'n');
     }
-    // Overload function for the function above
+    // Overload function for the function above (Used for isa account)
     // Assigns account num to 0 if not entered
     public void StoreAccount(int id, AccountType type, float balance, char isaType) {
         this.StoreAccount(id, type, balance, 0, isaType);
