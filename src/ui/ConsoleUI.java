@@ -189,6 +189,10 @@ public class ConsoleUI {
                 case 2:
                     Customer customer = authenticateCustomerMenu();
                     if (customer != null) {
+                        if (fileTools.AccountExists(customer.getCustomerID(), AccountType.BUSINESS)) {
+                            BusinessAccount businessAccount = new BusinessAccount(customer.getCustomerID());
+                            businessAccount.annualCharge();
+                        }
                         openAccountWithCustomer(customer);
                         whileTrue = false;
                     }
