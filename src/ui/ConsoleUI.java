@@ -252,7 +252,6 @@ public class ConsoleUI {
                     break;
                 case 4:
                     helper.askForHelpOpenAccountWithCustomer();
-                    whileTrue = false;
                     break;
                 default:
                     System.out.println("Invalid input. Choose between 1 and 4.");
@@ -303,13 +302,17 @@ public class ConsoleUI {
                     Who is this account for?
                     1. Yourself
                     2. On behalf of someone who is mentally challenged
+                    3. Help
                     """);
             System.out.print("Please enter the correct number: ");
             accountHolder = reader.next().trim();
             if (accountHolder.equals("1") || accountHolder.equals("2")) {
                 validAnswer = true;
+            } else if (accountHolder.equals("3")) {
+                helper.askForHelpOpenISAAccount();
             } else {
-                System.out.println("Please enter a valid number.");
+                    System.out.println("Please enter a valid number.");
+
             }
         } while (!validAnswer);
 

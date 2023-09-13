@@ -19,4 +19,15 @@ public class HelperUI {
         System.out.println("Choose option 3. to open a Business account for the current customer, if the customer does not have one already.");
     }
 
+    public void askForHelpOpenISAAccount(){
+        System.out.println("""
+             An ISA (individual savings account) is a tax-free savings or investment account that allows the customer 
+             to put his ISA allowance to work and maximize the potential returns he makes on his money, by shielding it from income tax, 
+             tax on dividends and capital gains tax.
+            """);
+
+
+    }
+
+
 }
