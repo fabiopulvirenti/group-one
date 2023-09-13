@@ -3,6 +3,7 @@ package accounts;
 
 import Tools.FileTools;
 
+import java.time.LocalDate;
 import java.util.Random;
 
 public class Customer {
@@ -76,5 +77,10 @@ public class Customer {
 
     public String getUserName(){
         return this.userName;
+    }
+
+    public int getCustomerAge() {
+        LocalDate date = LocalDate.now();
+        return (date.getYear() - Integer.valueOf(yearOfBirth));
     }
 }

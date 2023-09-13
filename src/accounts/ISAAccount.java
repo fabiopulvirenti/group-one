@@ -32,18 +32,11 @@ public class ISAAccount extends AbstractAccount{
         this.ukResident = ukResident;
         this.crownServant = crownServant;
 
-        //this line shpuld not be here
+        //this line should not be here
         FileTools fileTools = new FileTools();
         // Check if customer already has ISA account
         if (fileTools.AccountExists(customerID, AccountType.ISA)) {
             System.out.println("Access to account granted.");
-        } else {
-            // Check if user meets requirements for the ISA account
-            if (validateAccount()) {
-                System.out.println("New " + isaType.toLowerCase() + " ISA account created.");
-            } else {
-                System.out.println("You do not meet the requirements to open a " + isaType.toLowerCase() + " ISA account. Please check the requirements and try again.");
-            }
         }
     }
 
@@ -52,7 +45,7 @@ public class ISAAccount extends AbstractAccount{
      *
      * @return True or False dependent on if requirements are met.
      */
-    private  boolean validateAccount(){
+    public boolean validateAccount(){
         boolean valid = false;
         if (isaType.equalsIgnoreCase("cash")){
             return ((customerAge>=16) && (ukResident || crownServant));
