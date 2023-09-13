@@ -22,27 +22,27 @@ class FileToolsTest {
     @Test
     public void WritingToUserFile(){
         var tools = new FileTools();
-        tools.StoreUser(1, "Frankie", "Password");
+        tools.StoreUser(1, "Frankie", "Password","1957");
     }
     @Test
     public void WritingAnotherUser() {
         var tools = new FileTools();
-        tools.StoreUser(2, "Jeff","Passyword");
+        tools.StoreUser(2, "Jeff","Passyword", "2004");
     }
     @Test
     public void WritingUserSameIdDifferentUsername() {
         var tools = new FileTools();
-        tools.StoreUser(1, "Matthew", "Password123");
+        tools.StoreUser(1, "Matthew", "Password123","1957");
     }
     @Test
     public void WritingUserDifferentIdSameUsername() {
         var tools = new FileTools();
-        tools.StoreUser(4, "Frankie", "Packword");
+        tools.StoreUser(4, "Frankie", "Packword","1957");
     }
     @Test
     public void WritingToUserSameID() {
         var tools = new FileTools();
-        tools.StoreUser(1, "Frankie","Password");
+        tools.StoreUser(1, "Frankie","Password", "1957");
     }
     @Test
     public void ReadingUserFile() {

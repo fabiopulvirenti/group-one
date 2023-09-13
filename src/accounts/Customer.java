@@ -56,7 +56,7 @@ public class Customer {
         Random rand = new Random();
         this.customerID = rand.nextInt(10000);
         FileTools fileTools = new FileTools();
-        fileTools.StoreUser(customerID, userName,password);
+        fileTools.StoreUser(customerID, userName, password, yearOfBirth);
     }
 
     public int getCustomerID() {

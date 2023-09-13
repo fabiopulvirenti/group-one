@@ -45,7 +45,7 @@ public class ISAAccount extends AbstractAccount{
      *
      * @return True or False dependent on if requirements are met.
      */
-    public boolean validateAccount(){
+    public boolean validateAccount(String isaType, boolean ukResident, boolean crownServant, int customerAge){
         boolean valid = false;
         if (isaType.equalsIgnoreCase("cash")){
             return ((customerAge>=16) && (ukResident || crownServant));

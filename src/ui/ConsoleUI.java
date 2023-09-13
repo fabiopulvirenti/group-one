@@ -6,6 +6,7 @@ import accounts.Customer;
 import accounts.ISAAccount;
 import accounts.PersonalAccount;
 
+import java.time.LocalDate;
 import java.util.Scanner;
 
 public class ConsoleUI {
@@ -86,7 +87,7 @@ public class ConsoleUI {
         System.out.println("Insert customer's password: ");
         String inputPassword = reader.next();
 
-        FileTools fileTools = new FileTools();
+        //FileTools fileTools = new FileTools();
         boolean userExist = fileTools.UserExist(inputUserName);
 
         if (userExist) {
@@ -95,7 +96,7 @@ public class ConsoleUI {
                 System.out.println("Customer authenticated correctly");
 
                 int id = fileTools.ReadId(inputUserName);
-                Customer customer = new Customer(id, inputUserName, inputPassword, null);
+                Customer customer = new Customer(id, inputUserName, inputPassword, fileTools.ReadYearOfBirth(inputUserName));
 
                 System.out.println("Current customer is: " + customer.getUserName());
 
@@ -139,6 +140,24 @@ public class ConsoleUI {
                     System.out.println("Has the customer provided a valid address-based ID?[Y/N]");
                     String addressIDInput = reader.next();
 
+                    String yearOfBirth = "";
+                    boolean validAnswer = false;
+                    do {
+                        System.out.print("Please enter the customer's year of birth: ");
+                        yearOfBirth = reader.next();
+                        int year;
+                        try {
+                            year = Integer.parseInt(yearOfBirth);
+                            if (yearOfBirth.length() == 4 && year >= 1900 && year <= (LocalDate.now().getYear())) {
+                                validAnswer = true;
+                            } else {
+                                System.out.println("Please enter a valid year. [YYYY]");
+                            }
+                        } catch (Exception e) {
+                            System.out.println("Please enter a valid year. [YYYY]");
+                        }
+                    } while (!validAnswer);
+
                     if (photoIDInput.equalsIgnoreCase("Y") && addressIDInput.equalsIgnoreCase("Y")) {
                         System.out.println("Create customer username");
                         String customerUsername = reader.next();
@@ -146,7 +165,7 @@ public class ConsoleUI {
                         System.out.println("Create customer password");
                         String customerPassword = reader.next();
 
-                        Customer customer = new Customer(customerUsername, customerPassword, null);
+                        Customer customer = new Customer(customerUsername, customerPassword, yearOfBirth);
                         customer.setValidatedAddress(true);
                         customer.setValidatedPhotoId(true);
                         customer.storeNewCustomer();
@@ -274,7 +293,7 @@ public class ConsoleUI {
             if (accountHolder.equals("1") || accountHolder.equals("2")) {
                 validAnswer = true;
             } else {
-                System.out.println("Please enter a valid number.\n");
+                System.out.println("Please enter a valid number.");
             }
         } while (!validAnswer);
 
@@ -296,7 +315,7 @@ public class ConsoleUI {
                 if (choice.equals("1") || choice.equals("2") || choice.equals("3")) {
                     validAnswer = true;
                 } else {
-                    System.out.println("Please enter a valid number.\n");
+                    System.out.println("Please enter a valid number.");
                 }
             } while (!validAnswer);
             String countryName = "";
@@ -319,7 +338,7 @@ public class ConsoleUI {
                 if (ukResident.equals("yes") || ukResident.equals("no")) {
                     validAnswer = true;
                 } else {
-                    System.out.println("Please enter a valid answer.\n");
+                    System.out.println("Please enter a valid answer.");
                 }
             } while (!validAnswer);
 
@@ -336,7 +355,7 @@ public class ConsoleUI {
                 if (crownServant.equals("yes") || crownServant.equals("no")) {
                     validAnswer = true;
                 } else {
-                    System.out.println("Please enter a valid answer.\n");
+                    System.out.println("Please enter a valid answer.");
                 }
             } while (!validAnswer);
 
@@ -386,20 +405,20 @@ public class ConsoleUI {
                     isaType = "lifetime";
                 } else {
                     validAnswer = false;
-                    System.out.println("Please try again.\n");
+                    System.out.println("Please try again.");
                 }
             } while (!validAnswer);
             //Create isa account
             ISAAccount isaAccount = new ISAAccount(customer.getCustomerID(), isaNewBalance, customer.getCustomerName(), customerAge, isaType, ukRes, crownSer);
             //Check if user meets requirements for the ISA account
-            if (isaAccount.validateAccount()) {
+            if (isaAccount.validateAccount(isaType.toLowerCase(),ukRes,crownSer,customerAge)) {
                 System.out.println("New " + isaType.toLowerCase() + " ISA account created.");
+                //Adding account to file
+                char isaChoice = accountChoice.charAt(0);
+                fileTools.StoreAccount(customer.getCustomerID(), AccountType.ISA, isaNewBalance, isaChoice);
             } else {
                 System.out.println("You do not meet the requirements to open a " + isaType.toLowerCase() + " ISA account. Please check the requirements and try again.");
             }
-            //Adding account to file
-            char isaChoice = accountChoice.charAt(0);
-            fileTools.StoreAccount(customer.getCustomerID(), AccountType.ISA, isaNewBalance, isaChoice);
         }
     }
 

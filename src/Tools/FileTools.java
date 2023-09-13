@@ -382,6 +382,52 @@ public class FileTools {
         }
     }
 
+    // Functions take the username of the user and returns the year of birth associated with the username
+    // Returns 0 if the user doesn't exist or file fails to open
+    public String ReadYearOfBirth(String username) {
+        try (Scanner scanner = new Scanner(new File(String.valueOf(userPath)))) {
+            // Declare the variables used and give the scanner a delimiter of ','
+            String currentUsername;
+            String yearOfBirth = "0";
+            scanner.useDelimiter("[,\\n]");
+
+            if (!UserExist(username)) {
+                System.err.println("User doesn't exist");
+                return yearOfBirth;
+            }
+
+            // If the scanner has no next line, the file is empty
+            if (!scanner.hasNext()) {
+                // System.err.println("User file is empty");
+                scanner.close();
+                return yearOfBirth;
+            }
+
+
+            // Scans the file to check if the file contains the username provided
+            while (scanner.hasNextLine()) {
+                scanner.next();
+                currentUsername = scanner.next();
+                scanner.next();
+                // If the file contains the username, returns the year
+                if (currentUsername.equals(username)) {
+                    yearOfBirth = scanner.next();
+                    break;
+                }
+                scanner.nextLine();
+            }
+
+            // Closes the scanner and returns the year associated
+            scanner.close();
+            return yearOfBirth;
+
+        } catch (IOException e) {
+            // If the file fails to open, give an error and return null
+            System.err.println("Could not read from user file." + e.getMessage());
+            return null;
+        }
+    }
+
     // Function takes the id and account type of the user and returns the balance associated
     // Returns 0 if the account doesn't exist or if the file fails to open
     public String ReadAccountFile(int id, AccountType type) {
@@ -581,7 +627,7 @@ public class FileTools {
     // Writing to file functions
 
     // Writes to the user file, used for creating new users
-    public void StoreUser(int id, String username, String password) {
+    public void StoreUser(int id, String username, String password, String yearOfBirth) {
         try (BufferedWriter writer = Files.newBufferedWriter(userPath, StandardCharsets.UTF_8, APPEND)) {
 
             // Checks if the user exists, if so flags an error
@@ -590,9 +636,9 @@ public class FileTools {
             if (UserExist(username) || UserExist(id))
                 System.err.println("User already exists.");
             else if (FileEmpty(userPath))
-                writer.write("" + id + ',' + username + ',' + password);
+                writer.write("" + id + ',' + username + ',' + password + "," + yearOfBirth);
             else
-                writer.write("\n" + id + ',' + username + ',' + password);
+                writer.write("\n" + id + ',' + username + ',' + password + "," + yearOfBirth);
         } catch (IOException e) {
             // If the file can't be opened, flags up an error
             System.err.println("User could not be stored. " + e.getMessage());
