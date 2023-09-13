@@ -121,7 +121,7 @@ public class ConsoleUI {
             System.out.print("Choose the option:");
 
             int input;
-            String inputValue = reader.nextLine();
+            String inputValue = reader.next();
             try {
                 input = Integer.parseInt(inputValue);
             } catch (Exception e) {
@@ -159,8 +159,18 @@ public class ConsoleUI {
                     } while (!validAnswer);
 
                     if (photoIDInput.equalsIgnoreCase("Y") && addressIDInput.equalsIgnoreCase("Y")) {
-                        System.out.println("Create customer username");
-                        String customerUsername = reader.next();
+                        boolean uniqueUsernameCheck = true;
+                        String customerUsername="";
+                        while (uniqueUsernameCheck) {
+                            System.out.println("Create customer username");
+                            customerUsername = reader.next();
+
+                            if(fileTools.UserExist(customerUsername)){
+                                System.out.println("Username exist, please pick a new one.");
+                            } else {
+                                uniqueUsernameCheck = false;
+                            }
+                        }
 
                         System.out.println("Create customer password");
                         String customerPassword = reader.next();
@@ -209,7 +219,7 @@ public class ConsoleUI {
             System.out.print("Choose the option: ");
 
             int input;
-            String inputValue = reader.nextLine();
+            String inputValue = reader.next();
             try {
                 input = Integer.parseInt(inputValue);
             } catch (Exception e) {
@@ -252,7 +262,7 @@ public class ConsoleUI {
             System.out.println("How much does the customer want to deposit?");
 
             float balance;
-            String balanceInput = reader.nextLine();
+            String balanceInput = reader.next();
             try {
                 balance = Float.parseFloat(balanceInput.trim());
             } catch (Exception e) {
@@ -289,7 +299,7 @@ public class ConsoleUI {
                     2. On behalf of someone who is mentally challenged
                     """);
             System.out.print("Please enter the correct number: ");
-            accountHolder = reader.nextLine().trim();
+            accountHolder = reader.next().trim();
             if (accountHolder.equals("1") || accountHolder.equals("2")) {
                 validAnswer = true;
             } else {
@@ -311,7 +321,7 @@ public class ConsoleUI {
                         3. England or Wales
                         """);
                 System.out.print("Please enter the associated number: ");
-                choice = reader.nextLine().trim();
+                choice = reader.next().trim();
                 if (choice.equals("1") || choice.equals("2") || choice.equals("3")) {
                     validAnswer = true;
                 } else {
@@ -334,7 +344,7 @@ public class ConsoleUI {
             validAnswer = false;
             do {
                 System.out.print("Are you a UK resident? (Yes/No): ");
-                ukResident = reader.nextLine().trim().toLowerCase();
+                ukResident = reader.next().trim().toLowerCase();
                 if (ukResident.equals("yes") || ukResident.equals("no")) {
                     validAnswer = true;
                 } else {
@@ -351,7 +361,7 @@ public class ConsoleUI {
             validAnswer = false;
             do {
                 System.out.print("Are you a crown servant? (Yes/No): ");
-                crownServant = reader.nextLine().trim().toLowerCase();
+                crownServant = reader.next().trim().toLowerCase();
                 if (crownServant.equals("yes") || crownServant.equals("no")) {
                     validAnswer = true;
                 } else {
@@ -373,7 +383,7 @@ public class ConsoleUI {
             validAnswer = false;
             do {
                 System.out.print("Please enter the balance for the new ISA account: ");
-                String isaBalance = reader.nextLine();
+                String isaBalance = reader.next();
                 try {
                     isaNewBalance = Float.parseFloat(isaBalance);
                     validAnswer = true;
@@ -393,7 +403,7 @@ public class ConsoleUI {
                         Lifetime (L)
                         """);
                 System.out.print("What would you like to do? Please enter the associated letter: ");
-                accountChoice = reader.nextLine();
+                accountChoice = reader.next();
                 validAnswer = true;
                 if (accountChoice.trim().equalsIgnoreCase("c")) {
                     isaType = "cash";
